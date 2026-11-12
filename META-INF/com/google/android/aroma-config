@@ -1,0 +1,393 @@
+### LICENSE:
+#
+# Copyright (C) 2011 Ahmad Amarullah ( http://amarullz.com/ )
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+###
+
+ini_set("rom_version",          "3.1");
+ini_set("rom_author",          "Mr.61");
+ini_set("rom_date",             "August 10, 2020");
+
+ini_set("force_colorspace","rgba");
+
+fontresload( "0", "ttf/DroidSansFallback.ttf", "12" );
+fontresload( "1", "ttf/DroidSansFallback.ttf", "18" ); 
+
+splash(2000, "lcblues");
+
+theme("ElementalX");
+
+selectbox(
+    "Select Language",
+    "Please select installer language that you want to use in this installation:",
+    "@default",
+    "lang.prop",
+    "English", "English", 1,
+    "Simplified Chinesse", "简体中文", 0
+);
+
+if prop("lang.prop","selected.0")=="1" then
+  loadlang("langs/en.lang");
+endif;
+
+if prop("lang.prop","selected.0")=="2" then
+  loadlang("langs/cn.lang");
+endif;
+
+viewbox(
+    "\n<~rom_name>",
+    "<@center>\n<~text_for> <b>" + "<~rom_device>" + "</b>\n\n</@>" +
+    "\n\n\n\n"+
+    "  <~text_version>\t\t: <b><#selectbg_g> "+ini_get("rom_version")+"</#></b>\n" +
+    "  <~text_author>\t\t: <b><#selectbg_g> "+ini_get("rom_author")+"</#></b>\n" +
+    "  <~text_release>\t\t: <b><#selectbg_g> "+ini_get("rom_date")+"</#></b>\n" +
+    "  <~text_thanks>\t: <b><#selectbg_g> "+"asto18089"+"</#></b>\n" +
+    "  <~text_thanks>\t: <b><#selectbg_g> "+"南昌狗头人"+"</#></b>\n" +	
+    "  <~text_thanks>\t: <b><#selectbg_g> "+"lyq1996"+"</#></b>\n" +
+    "  <~text_thanks>\t: <b><#selectbg_g> "+"unknownbaka"+"</#></b>\n\n\n" +
+    "  <~text_next_t>",
+    "@welcome"
+);
+
+if prop("lang.prop","selected.0")=="1" then
+  agreebox(
+   "\n<~text_read>",
+   "<@center>\n\n\n</@>",
+   "",
+   "" + readfile_aroma("agreement_e.txt"),
+   "<~text_yes>",
+   "<@center>\n<~text_please_yes></@>"
+);
+endif;
+
+if prop("lang.prop","selected.0")=="2" then
+  agreebox(
+   "\n<~text_read>",
+   "<@center>\n\n\n</@>",
+   "",
+   "" + readfile_aroma("agreement_c.txt"),
+   "<~text_yes>",
+   "<@center>\n<~text_please_yes></@>"
+);
+endif;
+
+setvar(
+    "platform_check",
+    resexec("model.sh")
+  );
+if getvar("platform_check")=="1"
+then
+  menubox(
+    "\n<~text_error>>",
+    "<@center><b>\n<~text_ch>\n\n\n</@>",
+    "",
+    "model.prop",
+    "<~text_continue>","","@install",
+    "<~text_afraid>","","@trash"
+  );
+  if prop("model.prop","selected")=="2"
+  then
+    exit("");
+  endif;
+endif;
+
+menubox(
+    "选择CPU",
+    "选择你的CPU，没有的可以选择通用.",
+    "",
+    "select.prop",
+
+	"MSM8953",            "骁龙625",     "",      #-- selected = 1    	
+	"SDM660",            "骁龙660",     "",      #-- selected = 2
+	"MSM8998",            "骁龙835",     "",      #-- selected = 3
+	"<~text_common>",                "目前只支持屏幕超频",              ""      #-- selected = 4
+);
+
+if (prop("select.prop","selected")=="1") then
+	selectbox(
+	  "\nCPU voltage offset","<@center><b>\n<~text_cpu_adjust>\n</b></@>","","cpu_undervolt.prop",
+	  "-130mv","<~text_dang>",0,
+	  "-120mv","<~text_dang>",0,
+	  "-110mv","",0,
+	  "-100mv","",0,
+	  "-90mv","",0,
+	  "-80mv","",0,
+	  "-70mv","",0,
+	  "-60mv","",0,
+	  "-50mv","",0,
+	  "-40mv","",0,
+	  "-30mv","",0,
+	  "-20mv","",0,
+	  "-10mv","",0,
+	  "0mv","<~text_keep>",1,
+	  "+10mv","",0,
+	  "+20mv","",0,
+	  "+30mv","",0,
+	  "+40mv","",0,
+	  "+50mv","",0,
+	  "+60mv","",0,
+	  "+70mv","",0,
+	  "+80mv","",0,
+	  "+90mv","",0,
+	  "+100mv","",0,
+	  "+110mv","",0,
+	  "+120mv","<~text_dang>",0,
+	  "+130mv","<~text_dang>",0
+);
+endif;
+
+if (prop("select.prop","selected")=="2") then
+	selectbox(
+	  "\nCpu Little Adjust","<@center><b>\n<~text_cpu_little_frequency_adjust>\n</b></@>","","cpu_little.prop",
+	  "<~text_keep>","",1,
+	  "<~text_restore>(1843.2mhz)","",0,
+	  "Add Min 300mhz","",0,
+	  "Max 1401.6mhz","",0,
+	  "Max 1536.0mhz","",0,
+	  "Max 1747.2mhz","",0,
+	  "Max 1958.4mhz","",0,
+	  "Max 2150.4mhz","",0,
+	  "Max 2208.0mhz","",0
+	);
+endif;
+if (prop("select.prop","selected")=="3") then
+	selectbox(
+	  "\nCpu Little Adjust","<@center><b>\n<~text_cpu_little_frequency_adjust>\n</b></@>","","cpu_little.prop",
+	  "<~text_keep>","",1,
+	  "<~text_restore>(1900.8mhz)","",0,
+	  "Max 1555.2mhz","",0,
+	  "Max 1670.4mhz","",0,
+	  "Max 1747.2mhz","",0,
+	  "Max 1824.0mhz","",0,
+	  "Max 1958.4mhz","",0,
+	  "Max 2035.2mhz","",0,
+	  "Max 2112.0mhz","",0,
+	  "Max 2208.0mhz","",0,
+	  "Max 2304.0mhz","",0,
+	  "Max 2361.6mhz","",0,
+	  "Max 2457.6mhz","<~text_dang>",0
+	  
+	);
+
+	selectbox(
+	  "\nCPU Little Cluster Voltage Offset","<@center><b>\n<~text_cpu_little_adjust>\n</b></@>","","cpu_little_undervolt.prop",
+	  "-150mv","<~text_dang>",0,
+	  "-140mv","<~text_dang>",0,
+	  "-130mv","<~text_dang>",0,
+	  "-120mv","<~text_dang>",0,
+	  "-110mv","",0,
+	  "-100mv","",0,
+	  "-90mv","",0,
+	  "-80mv","",0,
+	  "-70mv","",0,
+	  "-60mv","",0,
+	  "-50mv","",0,
+	  "-40mv","",0,
+	  "-30mv","",0,
+	  "-20mv","",0,
+	  "-10mv","",0,
+	  "0mv","<~text_keep>",1,
+	  "+10mv","",0,
+	  "+20mv","",0,
+	  "+30mv","",0,
+	  "+40mv","",0,
+	  "+50mv","",0,
+	  "+60mv","",0,
+	  "+70mv","",0,
+	  "+80mv","",0,
+	  "+90mv","",0,
+	  "+100mv","",0,
+	  "+110mv","",0,
+	  "+120mv","<~text_dang>",0,
+	  "+130mv","<~text_dang>",0,
+	  "+140mv","<~text_dang>",0,
+	  "+150mv","<~text_dang>",0
+	);
+	selectbox(
+	  "\nCpu High Adjust","<@center><b>\n<~text_cpu_big_frequency_adjust>\n</b></@>","","cpu_big.prop",
+	  "<~text_keep>","",1,
+	  "<~text_restore>(2457.6mhz)","",0,
+	  "Max 1804.8mhz","",0,
+	  "Max 1958.4mhz","",0,
+	  "Max 2035.2mhz","",0,
+	  "Max 2112.0mhz","",0,
+	  "Max 2208.0mhz","",0,
+	  "Max 2265.6mhz","",0,
+	  "Max 2361.6mhz","",0,
+	  "Max 2476.8mhz","",0,
+	  "Max 2496.0mhz","",0,
+	  "Max 2553.6mhz","",0,
+	  "Max 2572.8mhz","",0
+	);
+
+	selectbox(
+	  "\nCPU High Cluster Voltage Offset","<@center><b>\n<~text_cpu_big_adjust>\n</b></@>","","cpu_big_undervolt.prop",
+	  "-130mv","<~text_dang>",0,
+	  "-120mv","<~text_dang>",0,
+	  "-110mv","",0,
+	  "-100mv","",0,
+	  "-90mv","",0,
+	  "-80mv","",0,
+	  "-70mv","",0,
+	  "-60mv","",0,
+	  "-50mv","",0,
+	  "-40mv","",0,
+	  "-30mv","",0,
+	  "-20mv","",0,
+	  "-10mv","",0,
+	  "0mv","<~text_keep>",1,
+	  "+10mv","",0,
+	  "+20mv","",0,
+	  "+30mv","",0,
+	  "+40mv","",0,
+	  "+50mv","",0,
+	  "+60mv","",0,
+	  "+70mv","",0,
+	  "+80mv","",0,
+	  "+90mv","",0,
+	  "+100mv","",0,
+	  "+110mv","",0,
+	  "+120mv","<~text_dang>",0,
+	  "+130mv","<~text_dang>",0
+	);
+
+	selectbox(
+	  "\nGPU voltage offset","<@center><b>\n<~text_gpu_adjust>\n</b></@>","","gpu_undervolt.prop",
+	  "-220mv","<~text_dang>",0,
+	  "-210mv","<~text_dang>",0,
+	  "-200mv","<~text_dang>",0,
+	  "-190mv","<~text_dang>",0,
+	  "-180mv","<~text_dang>",0,
+	  "-170mv","<~text_dang>",0,
+	  "-160mv","",0,
+	  "-150mv","",0,
+	  "-140mv","",0,
+	  "-130mv","",0,
+	  "-120mv","",0,
+	  "-110mv","",0,
+	  "-100mv","",0,
+	  "-90mv","",0,
+	  "-80mv","",0,
+	  "-70mv","",0,
+	  "-60mv","",0,
+	  "-50mv","",0,
+	  "-40mv","",0,
+	  "-30mv","",0,
+	  "-20mv","",0,
+	  "-10mv","",0,
+	  "0mv","<~text_keep>",1,
+	  "+10mv","",0,
+	  "+20mv","",0,
+	  "+30mv","",0,
+	  "+40mv","",0,
+	  "+50mv","",0,
+	  "+60mv","",0,
+	  "+70mv","",0,
+	  "+80mv","",0,
+	  "+90mv","",0,
+	  "+100mv","",0,
+	  "+110mv","",0,
+	  "+120mv","",0,
+	  "+130mv","",0,
+	  "+140mv","",0,
+	  "+150mv","",0,
+	  "+160mv","",0,
+	  "+170mv","<~text_dang>",0,
+	  "+180mv","<~text_dang>",0,
+	  "+190mv","<~text_dang>",0,
+	  "+200mv","<~text_dang>",0,
+	  "+210mv","<~text_dang>",0,
+	  "+220mv","<~text_dang>",0
+	);
+endif;
+
+selectbox(
+  "\nScreen refresh rate","<@center><b>\n<~text_screen_refresh_rate_adjust>\n</b></@>","","screen_refresh_rate.prop",
+  "<~text_keep>","",1,
+  "60Hz","",0,
+  "61Hz","",0,
+  "62Hz","",0,
+  "63Hz","",0,
+  "64Hz","",0,
+  "65Hz","",0,
+  "66Hz","",0,
+  "67Hz","",0,
+  "68Hz","",0,
+  "69Hz","",0,
+  "70Hz","",0,
+  "71Hz","",0,
+  "72Hz","",0,
+  "73Hz","",0,
+  "74Hz","",0,
+  "75Hz","",0,
+  "76Hz","",0,
+  "77Hz","",0,
+  "78Hz","",0,
+  "79Hz","",0,
+  "80Hz","",0,
+  "81Hz","",0,
+  "82Hz","",0,
+  "83Hz","",0,
+  "84Hz","",0,
+  "85Hz","",0,
+  "86Hz","",0,
+  "87Hz","",0,
+  "88Hz","",0,
+  "89Hz","",0,
+  "90Hz","",0
+);
+
+selectbox(
+  "\nBackup","<@center><b>\n<~text_backup>/sdcard/bootimage</b>\n\n</@>","","backup.prop",
+  "<~text_yess>","",1,
+  "<~text_nooo>","",0
+);
+
+menubox(
+  "\nInstaller",
+  "<@center>\n\n\n</@>",
+  "",
+  "menu.prop",
+  "<~text_continue>","","@install",
+  "<~text_afraid>","","@trash"
+);
+
+if prop("menu.prop","selected")=="2"
+then
+  exit("");
+endif;
+
+setvar("retstatus",
+install(
+  "\nInstalling",
+  "<@center>\n<~text_installing>\n<~text_waiting></@>",
+  "")
+);
+
+ini_set("text_next", "<~text_fin>");
+
+if getvar("retstatus")=="0" then
+  viewbox(
+  "\n<~text_insfin>",
+  "<@center>\n\n\n<~text_reboot>"+
+  "\n\n\n\n</@>",
+  ""
+);
+else
+   viewbox("<~text_insfail>",
+   "\n\nInstaller Status: "+ 
+   getvar("retstatus"),"@warning");
+endif;
+
